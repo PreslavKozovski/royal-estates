@@ -16,6 +16,7 @@ export class EstatesPage implements OnInit, OnDestroy {
     private service: DataService,
     private loadingController: LoadingController,
     private activatedRoute: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -32,6 +33,10 @@ export class EstatesPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.promise.unsubscribe();
+  }
+
+  onViewClick(id: string) {
+    this.router.navigate(['/estate-home', id]);
   }
 
   async showLoading() {

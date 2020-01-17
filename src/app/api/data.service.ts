@@ -22,8 +22,9 @@ export class DataService {
     .pipe(
       map(response => {
         let data = [];
+
         Object.keys(response).forEach(key => {
-          if (response[key].location.name === name){
+          if (response[key].location.name === name) {
             let items = response[key].estates;
             items = _.chain(items).groupBy('region').toPairs()
             .map( currentData => {
@@ -33,6 +34,29 @@ export class DataService {
             data = items;
           }
         });
+
+        return data;
+      }),
+      catchError(this.handleError)
+    );
+  }
+
+  public getEstate(id): Observable<any> {
+    return this.http.get<any>(this.baseURL + 'locations-data.json')
+    .pipe(
+      map(response => {
+        let data = {};
+
+        Object.keys(response).forEach(key => {
+          Object.keys(response[key].estates).forEach(estateKey => {
+            const estate = response[key].estates[estateKey];
+
+            if (estate.id === parseInt(id, 10)) {
+              data = estate;
+            }
+          });
+        });
+
         return data;
       }),
       catchError(this.handleError)

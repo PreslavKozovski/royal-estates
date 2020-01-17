@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DataService } from '../api/data.service';
-import { LoadingController, NavController } from '@ionic/angular';
-import { NavigationExtras } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,7 +14,6 @@ export class LocationsPage implements OnInit, OnDestroy {
   constructor(
     private service: DataService,
     private loadingController: LoadingController,
-    private navCtl: NavController,
     private router: Router
   ) {}
 
