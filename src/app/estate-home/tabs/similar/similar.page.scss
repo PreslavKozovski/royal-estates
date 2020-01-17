@@ -1,0 +1,12 @@
+.filter-wrap {
+    width: 80%;
+    height: 60px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+
+    > * {
+        padding: 20px;
+    }
+}

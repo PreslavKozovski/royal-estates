@@ -34,11 +34,6 @@ const routes: Routes = [
             loadChildren: () => import('./tabs/similar/similar.module').then( m => m.SimilarPageModule)
           }
         ]
-      },
-      {
-        path: '',
-        redirectTo: 'overview',
-        pathMatch: 'full'
       }
     ]
   }

@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../api/data.service';
-import { LoadingController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 
 @Component({
@@ -12,28 +11,27 @@ import { Storage } from '@ionic/storage';
 export class EstateHomePage implements OnInit, OnDestroy {
   private promise;
   private id = '';
-  private region = '';
+  private city = '';
   private estate: any = {};
 
   constructor(
     private service: DataService,
-    private loadingController: LoadingController,
     private activatedRoute: ActivatedRoute,
-    private storage: Storage
+    private storage: Storage,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    this.showLoading();
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
     this.promise = this.service.getEstate(this.id)
     .subscribe({
       next: estate => {
         const addressArr = estate.address.split(' ');
         this.estate = estate;
-        this.region = addressArr[addressArr.length - 1];
+        this.city = addressArr[addressArr.length - 1];
         this.storage.set('currentEstate', JSON.stringify(this.estate));
 
-        this.loadingController.dismiss();
+        this.router.navigate(['estate-home/' + this.id + '/overview']);
       }
     });
   }
@@ -41,12 +39,4 @@ export class EstateHomePage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.promise.unsubscribe();
   }
-
-  async showLoading() {
-    const loading = await this.loadingController.create({
-      message: 'Loading Estate'
-    });
-    await loading.present();
-  }
-
 }
