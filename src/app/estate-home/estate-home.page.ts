@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../api/data.service';
 import { LoadingController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-estate-home',
@@ -18,7 +19,7 @@ export class EstateHomePage implements OnInit, OnDestroy {
     private service: DataService,
     private loadingController: LoadingController,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private storage: Storage
   ) { }
 
   ngOnInit() {
@@ -30,6 +31,7 @@ export class EstateHomePage implements OnInit, OnDestroy {
         const addressArr = estate.address.split(' ');
         this.estate = estate;
         this.region = addressArr[addressArr.length - 1];
+        this.storage.set('currentEstate', JSON.stringify(this.estate));
 
         this.loadingController.dismiss();
       }
@@ -42,7 +44,7 @@ export class EstateHomePage implements OnInit, OnDestroy {
 
   async showLoading() {
     const loading = await this.loadingController.create({
-      message: 'Loading Location Estates'
+      message: 'Loading Estate'
     });
     await loading.present();
   }
