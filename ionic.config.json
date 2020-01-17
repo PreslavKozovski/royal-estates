@@ -1,7 +1,8 @@
 {
   "name": "royal-estates",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   },
   "type": "angular"
 }
