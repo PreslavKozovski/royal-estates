@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./my-estates.page.scss'],
 })
 export class MyEstatesPage implements OnInit {
-
+  public savedEstates: any = [];
   constructor() { }
 
   ngOnInit() {
