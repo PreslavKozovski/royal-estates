@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-my-estates',
@@ -7,9 +9,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MyEstatesPage implements OnInit {
   public savedEstates: any = [];
-  constructor() { }
+  constructor(
+    private storage: Storage,
+    private router: Router
+  ) { }
 
   ngOnInit() {
   }
 
+  async ionViewWillEnter() {
+    await this.getSavedEstates();
+  }
+
+  onViewClick(id: string) {
+    this.router.navigate(['/estate-home', id]);
+  }
+
+  async getSavedEstates() {
+    await this.storage.get('savedEstates').then((val) => {
+      if (val != null) {
+        this.savedEstates = JSON.parse(val);
+      }
+    });
+  }
 }

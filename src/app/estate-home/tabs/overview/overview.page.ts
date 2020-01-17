@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ToastController, Events } from '@ionic/angular';
 import * as _ from 'lodash';
 
 @Component({
@@ -16,7 +16,8 @@ export class OverviewPage implements OnInit {
   constructor(
     private storage: Storage,
     private alertController: AlertController,
-    private toastController: ToastController
+    private toastController: ToastController,
+    public events: Events
   ) { }
 
   ngOnInit() { }
@@ -44,7 +45,10 @@ export class OverviewPage implements OnInit {
 
   saveToMyEstates() {
     this.savedEstates.push(this.estate);
-    this.storage.set('savedEstates', JSON.stringify(this.savedEstates));
+    this.storage.set('savedEstates', JSON.stringify(this.savedEstates))
+      .then(() => {
+        this.events.publish('savedEstatesChanged');
+      });
   }
 
   async showConfirm() {
@@ -57,9 +61,13 @@ export class OverviewPage implements OnInit {
             _.remove(this.savedEstates, {
               id: this.estate.id
             });
-            this.storage.set('savedEstates', JSON.stringify(this.savedEstates));
+            this.storage.set('savedEstates', JSON.stringify(this.savedEstates))
+              .then(() => {
+                this.events.publish('savedEstatesChanged');
+              });
             this.showToast('Estate with Ref. No ' + this.estate.refNumber + ' removed');
             this.saveEstatesButtonTitle = 'SAVE TO MY ESTATES';
+            this.events.publish('savedEstatesChanged');
           }
         }, {
           text: 'No',
