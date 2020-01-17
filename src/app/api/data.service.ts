@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
+import * as _ from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,28 @@ export class DataService {
 
   public getLocations(): Observable<any> {
     return this.http.get<any>(this.baseURL + 'locations.json').pipe(
-      tap(data => console.log('All: ' + JSON.stringify(data))),
+      catchError(this.handleError)
+    );
+  }
+
+  public getLocationEstates(name): Observable<any> {
+    return this.http.get<any>(this.baseURL + 'locations-data.json')
+    .pipe(
+      map(response => {
+        let data = [];
+        Object.keys(response).forEach(key => {
+          if (response[key].location.name === name){
+            let items = response[key].estates;
+            items = _.chain(items).groupBy('region').toPairs()
+            .map( currentData => {
+              return _.zipObject(['region', 'estates'], currentData);
+            }).value();
+
+            data = items;
+          }
+        });
+        return data;
+      }),
       catchError(this.handleError)
     );
   }

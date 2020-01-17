@@ -17,6 +17,10 @@ const routes: Routes = [
   },
   {
     path: 'estates',
+    redirectTo: 'my-estates'
+  },
+  {
+    path: 'estates/:name',
     loadChildren: () => import('./estates/estates.module').then( m => m.EstatesPageModule)
   },
   {

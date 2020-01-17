@@ -1,16 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DataService } from '../api/data.service';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, NavController } from '@ionic/angular';
+import { NavigationExtras } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-locations',
   templateUrl: './locations.page.html',
   styleUrls: ['./locations.page.scss'],
 })
-export class LocationsPage implements OnInit {
+export class LocationsPage implements OnInit, OnDestroy {
   private promise;
   private locations: any = [];
-  constructor(private service: DataService, private loadingController: LoadingController) {}
+  constructor(
+    private service: DataService,
+    private loadingController: LoadingController,
+    private navCtl: NavController,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.showLoading();
@@ -22,6 +29,14 @@ export class LocationsPage implements OnInit {
           this.loadingController.dismiss();
         }
       });
+  }
+
+  ngOnDestroy() {
+    this.promise.unsubscribe();
+  }
+
+  locationClick(name: string) {
+    this.router.navigate(['/estates', name]);
   }
 
   async showLoading() {
